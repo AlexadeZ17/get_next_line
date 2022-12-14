@@ -6,11 +6,13 @@
 /*   By: alrodri2 <alrodri2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/10 12:27:25 by alrodri2          #+#    #+#             */
-/*   Updated: 2022/12/12 16:25:31 by alrodri2         ###   ########.fr       */
+/*   Updated: 2022/12/14 14:14:17 by alrodri2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-char ft_cut(const char *s1, const char *limit)
+#include "get_next_line.h"
+
+char *ft_cut(const char *s1, const char *limit)
 {
     char    *out;
     int     i;
@@ -19,8 +21,8 @@ char ft_cut(const char *s1, const char *limit)
     out = ft_calloc(1, sizeof(char));
     while (s1 != limit)
     {
-        out = ft_calloc(1, sizeof(char));
-        out[i] = s1[i];
+        out = ft_strjoin(out, ft_calloc(1, sizeof(char)));
+        out[i] = *s1;
         ++i;
         ++s1;
         
@@ -30,26 +32,52 @@ char ft_cut(const char *s1, const char *limit)
 
 char *get_next_line(int fd)
 {
-    char *line;
-    static char *save;
-    char *tmp;
+    char        *line;
+    char        *tmp;
+    char        *lim;
+    static char *buff;
 
-    save = ft_calloc(BUFFER_SIZE, sizeof(char));
-    read(fd, save, BUFFER_SIZE);
-    if (ft_strrchr(save, '\n') == 0)
+    buff = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+    //line = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+    read(fd, buff, BUFFER_SIZE);
+
+    line = "";
+    while (ft_strrchr(buff, '\n') == 0)
     {
-        line = ft_strjoin(line, save);
-        ft_free(save);
+        line = ft_strjoin(line, buff);
+        read(fd, buff, BUFFER_SIZE);
     }
-    else
+
+    lim = ft_strrchr(buff, '\n');
+    tmp = ft_cut(buff, lim);
+    line = ft_strjoin(line, tmp);
+    ft_free(buff);
+    buff = lim+1;
+    printf("%s\n", buff);
+    return (line);
+}
+/*
+char *get_next_line(int fd)
+{
+    static char *buff;
+
+    read(fd, buff, BUFFER_SIZE);
+    while (ft_strrchr(buff, '\0') == 0)
     {
-        tmp = ft_cut(save, ft_strrchr(save, '\n'));
-        line = ft_strjoin(line, tmp);
-        tmp = save;
-        ft_free(save);
-        save = tmp;
-        return (line);
+        get_line(buff);
+        read(fd, buff, BUFFER_SIZE);
     }
+    
+}
+*/
+int main()
+{
+    int fd = open("test.txt", O_RDONLY); // read mode
+    printf("%s", get_next_line(fd));
+    printf("%s", get_next_line(fd));
+
+    char *str = "hola que tal";
+    //printf("%s", ft_cut(str, &str[5]));
 }
 
 /*

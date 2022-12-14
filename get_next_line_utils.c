@@ -6,7 +6,7 @@
 /*   By: alrodri2 <alrodri2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/10 12:38:35 by alrodri2          #+#    #+#             */
-/*   Updated: 2022/12/12 15:38:12 by alrodri2         ###   ########.fr       */
+/*   Updated: 2022/12/14 14:07:59 by alrodri2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	*ft_calloc(size_t count, size_t size)
 	out = malloc(count * size);
 	if (!out)
 		return (NULL);
-	ft_bzero(out, count * size);
     unsigned long	c;
 
 	c = 0;
@@ -70,7 +69,10 @@ char	*ft_strrchr(const char *s, int c)
 	while (*s != '\0')
 	{
 		if (*s == (char )c)
+		{
 			pos = s;
+			break ;
+		}
 		++s;
 	}
 	if ((char )c == '\0')
@@ -83,4 +85,5 @@ char	*ft_strrchr(const char *s, int c)
 void ft_free(char *str)
 {
     free(str);
+	str = NULL;
 }
